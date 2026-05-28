@@ -1,42 +1,56 @@
 import random
 
+class Number:
+    def __init__(self):
+        self.value = random.randint(1, 99)
 
-def main():
-    print("The game is started")
+    def is_even(self):
+        return self.value % 2 == 0
 
-    num = random.randint(1,99)
-    score = 10
-    while True:     
-        users_number = input("Guess the number: ")
-        if users_number == 'exit':
-            
-            break
-        elif users_number== 'is the number even':
-            if num % 2 ==0 :
-                print('The number is even')
+
+class User:
+    def get_input(self):
+        return input("Guess the number: ")
+
+
+class Game:
+    def __init__(self):
+        self.number = Number()
+        self.user = User()
+        self.score = 10
+
+    def process_guess(self, guess):
+        if guess == "exit":
+            print("Game ended")
+            return False
+
+        if guess == "is the number even":
+            if self.number.is_even():
+                print("The number is even")
             else:
-                print("the number is odd ")
-        elif num == users_number:
-            print("You won")
-            print(f'Your score {score}')
-        else: 
-            print("You lose")
-        score -= 1
-        
+                print("The number is odd")
+            return True
 
-    
+        if guess.isdigit() and int(guess) == self.number.value:
+            print("You won!")
+            print(f"Your score: {self.score}")
+            return False
 
-    # TODO: Features 
-    # use loop
-    # take input for finishing the game
-    # take input for hint question 
-    # add scoring mechanism 
+        print("Wrong guess")
+        self.score -= 1
+        return True
 
-    # TODO: Refactor
-    # extract classes
-    # use separate files
+    def start(self):
+        print("The game is started")
 
+        running = True
+        while running and self.score > 0:
+            guess = self.user.get_input()
+            running = self.process_guess(guess)
+
+        if self.score <= 0:
+            print("You lost! Score is 0.")
 
 
 if __name__ == "__main__":
-    main()
+    Game().start()
